@@ -1,9 +1,11 @@
-module RLCore
+
+module JuliaRL
 
 using Random
 using Logging
 
 greet() = println("Hello Reinforcement Learning!")
+
 
 export
     AbstractEnvironment,
@@ -40,5 +42,4 @@ export
     RandomAgent
 include("agent/random.jl")
 
-
-end # module
+end

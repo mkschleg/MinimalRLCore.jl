@@ -1,0 +1,8 @@
+name = "docs"
+uuid = "6d2757e4-e6e4-11e9-27e1-8d164c5d9fe3"
+authors = ["Matthew Schlegel <mkschleg@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+RLCore = "a0fc63f0-e6dc-11e9-23a7-4fc1812c3025"
