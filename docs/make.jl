@@ -24,7 +24,7 @@ makedocs(
     ]
 )
 
-# deploydocs(
-#     repo = "github.com/mkschleg/RLCore.jl.git",
-#     devbranch = "master"
-# )
+deploydocs(
+    repo = "github.com/mkschleg/RLCore.jl.git",
+    devbranch = "master"
+)
