@@ -2,10 +2,10 @@
 
 
 ```@meta
-CurrentModule = JuliaRL
+CurrentModule = RLCore
 ```
 
 ```@autodocs
-Modules = [JuliaRL]
+Modules = [RLCore]
 Pages   = ["feature_constructors.jl"]
 ```
