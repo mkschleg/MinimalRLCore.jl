@@ -1,13 +1,13 @@
 # Using the Environment API
 
-This document serves as a guide in how to implement and use the `AbstractEnvironment` API. You can find full documentation in the documentation section.
+This document serves as a guide in how to implement and use the `AbstractEnvironment` API. You can find full documentation in the documentation section. Some of these details are out of date but will be updated after the API stabilizes.
 
 
 ## Implementing a new environment
 
 We are going to implement the Mountain Car in this document to get used to how we take advantage of the API, and some of the functionality we get by implementing the full API!
 
-I often create a module which contains several environment constants (which are consistent across all versions of this environment). You can also accomplish this by creating a few functions for the type to inline these values, and many other ways. You want to make sure to declare these global variables constant to get nice compiler optimizations.
+I often create a module which contains several environment constants (which are consistent across all versions of this environment). You can also accomplish this by creating a few functions for the type to inline these values, and many other ways. You want to make sure to declare these global variables constant to get nice compiler optimizations for global scope variables. There are also other ways of handling this such as: creating inline functions return the values you care about, others...
 
 ```Julia
 module MountainCarConst
@@ -21,9 +21,14 @@ const Accelerate=3
 end
 ```
 
+We create the initial MountainCar struct which is a subtype of AbstractEnvironment. There are several functions we must implement if we want to take advantage of the RLCore API.
+
+- `RLCore.reset!`
+- `RLCore.environment_step!`
+
 
 ```Julia
-mutable struct MountainCar <: JuliaRL.AbstractEnvironment
+mutable struct MountainCar <: RLCore.AbstractEnvironment
     pos::Float64
     vel::Float64
     actions::AbstractSet
@@ -38,19 +43,19 @@ end
 ```
 
 ```Julia
-JuliaRL.get_actions(env::MountainCar) = env.actions
+RLCore.get_actions(env::MountainCar) = env.actions
 valid_action(env::MountainCar, action) = action in env.actions
 ```
 
 ```Julia
-function JuliaRL.reset!(env::MountainCar, rng::AbstractRNG; kwargs...)
+function RLCore.reset!(env::MountainCar, rng::AbstractRNG; kwargs...)
     env.pos = (rand(rng)*(MountainCarConst.pos_initial_range[2]
                           - MountainCarConst.pos_initial_range[1])
                + MountainCarConst.pos_initial_range[1])
     env.vel = 0.0
 end
 
-function JuliaRL.reset!(env::MountainCar,
+function RLCore.reset!(env::MountainCar,
                         start_state::T;
                         kwargs...) where {T<:AbstractArray}
     if env.normalized
@@ -66,7 +71,7 @@ end
 ```
 
 ```Julia
-function JuliaRL.environment_step!(env::MountainCar,
+function RLCore.environment_step!(env::MountainCar,
                                    action;
                                    rng=Random.GLOBAL_RNG, kwargs...)
     
@@ -80,7 +85,7 @@ end
 ```
 
 ```Julia
-function JuliaRL.get_reward(env::MountainCar) # -> determines if the agent_state is terminal
+function RLCore.get_reward(env::MountainCar) # -> determines if the agent_state is terminal
     if env.pos >= MountainCarConst.pos_limit[2]
         return 0
     end
@@ -88,12 +93,12 @@ function JuliaRL.get_reward(env::MountainCar) # -> determines if the agent_state
 end
 
 
-function JuliaRL.is_terminal(env::MountainCar) # -> determines if the agent_state is terminal
+function RLCore.is_terminal(env::MountainCar) # -> determines if the agent_state is terminal
     return env.pos >= MountainCarConst.pos_limit[2]
 end
 
 
-function JuliaRL.get_state(env::MountainCar)
+function RLCore.get_state(env::MountainCar)
     if env.normalized
         return get_normalized_state(env)
     else
