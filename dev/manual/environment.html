@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Environments · RLCore</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>RLCore</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li class="current"><a class="toctext" href="environment.html">Environments</a><ul class="internal"><li><a class="toctext" href="#Implementing-a-new-environment-1">Implementing a new environment</a></li></ul></li></ul></li><li><span class="toctext">Documentation</span><ul><li><a class="toctext" href="../docs/environments.html">Environments</a></li><li><a class="toctext" href="../docs/agents.html">Agents</a></li><li><a class="toctext" href="../docs/gvf.html">GVF</a></li><li><a class="toctext" href="../docs/feature_creators.html">Feature Constructor</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Manual</li><li><a href="environment.html">Environments</a></li></ul><a class="edit-page" href="https://github.com/mkschleg/RLCore.jl/blob/master/docs/src/manual/environment.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Environments</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Using-the-Environment-API-1" href="#Using-the-Environment-API-1">Using the Environment API</a></h1><p>This document serves as a guide in how to implement and use the <code>AbstractEnvironment</code> API. You can find full documentation in the documentation section.</p><h2><a class="nav-anchor" id="Implementing-a-new-environment-1" href="#Implementing-a-new-environment-1">Implementing a new environment</a></h2><p>We are going to implement the Mountain Car in this document to get used to how we take advantage of the API, and some of the functionality we get by implementing the full API!</p><p>I often create a module which contains several environment constants (which are consistent across all versions of this environment). You can also accomplish this by creating a few functions for the type to inline these values, and many other ways. You want to make sure to declare these global variables constant to get nice compiler optimizations.</p><pre><code class="language-Julia">module MountainCarConst
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Environments · RLCore</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>RLCore</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li class="current"><a class="toctext" href="environment.html">Environments</a><ul class="internal"><li><a class="toctext" href="#Implementing-a-new-environment-1">Implementing a new environment</a></li></ul></li></ul></li><li><span class="toctext">Documentation</span><ul><li><a class="toctext" href="../docs/environments.html">Environments</a></li><li><a class="toctext" href="../docs/agents.html">Agents</a></li><li><a class="toctext" href="../docs/gvf.html">GVF</a></li><li><a class="toctext" href="../docs/feature_creators.html">Feature Constructor</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Manual</li><li><a href="environment.html">Environments</a></li></ul><a class="edit-page" href="https://github.com/mkschleg/RLCore.jl/blob/master/docs/src/manual/environment.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Environments</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Using-the-Environment-API-1" href="#Using-the-Environment-API-1">Using the Environment API</a></h1><p>This document serves as a guide in how to implement and use the <code>AbstractEnvironment</code> API. You can find full documentation in the documentation section. Some of these details are out of date but will be updated after the API stabilizes.</p><h2><a class="nav-anchor" id="Implementing-a-new-environment-1" href="#Implementing-a-new-environment-1">Implementing a new environment</a></h2><p>We are going to implement the Mountain Car in this document to get used to how we take advantage of the API, and some of the functionality we get by implementing the full API!</p><p>I often create a module which contains several environment constants (which are consistent across all versions of this environment). You can also accomplish this by creating a few functions for the type to inline these values, and many other ways. You want to make sure to declare these global variables constant to get nice compiler optimizations for global scope variables. There are also other ways of handling this such as: creating inline functions return the values you care about, others...</p><pre><code class="language-Julia">module MountainCarConst
 const vel_limit = (-0.07, 0.07)
 const pos_limit = (-1.2, 0.5)
 const pos_initial_range = (-0.6, 0.4)
@@ -7,7 +7,7 @@ const pos_initial_range = (-0.6, 0.4)
 const Reverse=1
 const Neutral=2
 const Accelerate=3
-end</code></pre><pre><code class="language-Julia">mutable struct MountainCar &lt;: JuliaRL.AbstractEnvironment
+end</code></pre><p>We create the initial MountainCar struct which is a subtype of AbstractEnvironment. There are several functions we must implement if we want to take advantage of the RLCore API.</p><ul><li><code>RLCore.reset!</code></li><li><code>RLCore.environment_step!</code></li></ul><pre><code class="language-Julia">mutable struct MountainCar &lt;: RLCore.AbstractEnvironment
     pos::Float64
     vel::Float64
     actions::AbstractSet
@@ -18,15 +18,15 @@ end</code></pre><pre><code class="language-Julia">mutable struct MountainCar &lt
         @boundscheck (vel &gt;= mcc.vel_limit[1] &amp;&amp; vel &lt;= mcc.vel_limit[2])
         new(pos, vel, Set([mcc.Reverse, mcc.Neutral, mcc.Accelerate]), normalized)
     end
-end</code></pre><pre><code class="language-Julia">JuliaRL.get_actions(env::MountainCar) = env.actions
-valid_action(env::MountainCar, action) = action in env.actions</code></pre><pre><code class="language-Julia">function JuliaRL.reset!(env::MountainCar, rng::AbstractRNG; kwargs...)
+end</code></pre><pre><code class="language-Julia">RLCore.get_actions(env::MountainCar) = env.actions
+valid_action(env::MountainCar, action) = action in env.actions</code></pre><pre><code class="language-Julia">function RLCore.reset!(env::MountainCar, rng::AbstractRNG; kwargs...)
     env.pos = (rand(rng)*(MountainCarConst.pos_initial_range[2]
                           - MountainCarConst.pos_initial_range[1])
                + MountainCarConst.pos_initial_range[1])
     env.vel = 0.0
 end
 
-function JuliaRL.reset!(env::MountainCar,
+function RLCore.reset!(env::MountainCar,
                         start_state::T;
                         kwargs...) where {T&lt;:AbstractArray}
     if env.normalized
@@ -38,7 +38,7 @@ function JuliaRL.reset!(env::MountainCar,
         env.pos = (start_state[1]*(pos_limit[2] - pos_limit[1])) + pos_limit[1]
         env.vel = (start_state[2]*(vel_limit[2] - vel_limit[1])) + vel_limit[1]
     end
-end</code></pre><pre><code class="language-Julia">function JuliaRL.environment_step!(env::MountainCar,
+end</code></pre><pre><code class="language-Julia">function RLCore.environment_step!(env::MountainCar,
                                    action;
                                    rng=Random.GLOBAL_RNG, kwargs...)
     
@@ -48,7 +48,7 @@ end</code></pre><pre><code class="language-Julia">function JuliaRL.environment_s
               MountainCarConst.vel_limit...)
     env.pos = clamp(env.pos + env.vel,
                     MountainCarConst.pos_limit...)
-end</code></pre><pre><code class="language-Julia">function JuliaRL.get_reward(env::MountainCar) # -&gt; determines if the agent_state is terminal
+end</code></pre><pre><code class="language-Julia">function RLCore.get_reward(env::MountainCar) # -&gt; determines if the agent_state is terminal
     if env.pos &gt;= MountainCarConst.pos_limit[2]
         return 0
     end
@@ -56,12 +56,12 @@ end</code></pre><pre><code class="language-Julia">function JuliaRL.get_reward(en
 end
 
 
-function JuliaRL.is_terminal(env::MountainCar) # -&gt; determines if the agent_state is terminal
+function RLCore.is_terminal(env::MountainCar) # -&gt; determines if the agent_state is terminal
     return env.pos &gt;= MountainCarConst.pos_limit[2]
 end
 
 
-function JuliaRL.get_state(env::MountainCar)
+function RLCore.get_state(env::MountainCar)
     if env.normalized
         return get_normalized_state(env)
     else
