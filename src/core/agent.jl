@@ -18,7 +18,7 @@ end
 """
     start!(agent::AbstractAgent, env_s_tp1, rng::AbstractRNG; kwargs...)
 """
-function start!(agent::AbstractAgent, env_s_tp1, rng::AbstractRNG; kwargs...)
+function start!(agent::AbstractAgent, env_s_tp1, rng; kwargs...)
     @error "Implement start! function for agent $(typeof(agent))"
 end
 
@@ -37,7 +37,7 @@ end
 """
     step!(agent::AbstractAgent, env_s_tp1, r, terminal, rng::AbstractRNG; kwargs...)
 """
-function step!(agent::AbstractAgent, env_s_tp1, r, terminal, rng::AbstractRNG; kwargs...)
+function step!(agent::AbstractAgent, env_s_tp1, r, terminal, rng; kwargs...)
     @error "Implement step! function for agent $(typeof(agent))"
 end
 

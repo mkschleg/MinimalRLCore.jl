@@ -28,9 +28,9 @@ function start!(env::AbstractEnvironment, start_state; kwargs...)
 end
 
 """
-    start!(env::AbstractEnvironment, rng::AbstractRNG; kwargs...)
+    start!(env::AbstractEnvironment, rng; kwargs...)
 """
-function start!(env::AbstractEnvironment, rng::AbstractRNG; kwargs...)
+function start!(env::AbstractEnvironment, rng; kwargs...)
     reset!(env, rng; kwargs...)
     return get_state(env)
 end
@@ -47,9 +47,9 @@ function step!(env::AbstractEnvironment, action; kwargs...) # -> env, state, rew
 end
 
 """
-    step!(env::AbstractEnvironment, action, rng::AbstractRNG; kwargs...)
+    step!(env::AbstractEnvironment, action, rng; kwargs...)
 """
-function step!(env::AbstractEnvironment, action, rng::AbstractRNG; kwargs...) # -> env, state, reward, terminal
+function step!(env::AbstractEnvironment, action, rng; kwargs...) # -> env, state, reward, terminal
     environment_step!(env, action, rng; kwargs...)
     return get_state(env), get_reward(env), is_terminal(env)
 end
@@ -101,7 +101,7 @@ end
 """
     environment_step!(env::AbstractEnvironment, action, rng::AbstractRNG; kwargs...)
 """
-function environment_step!(env::AbstractEnvironment, action, rng::AbstractRNG; kwargs...)
+function environment_step!(env::AbstractEnvironment, action, rng; kwargs...)
     @error "Implement environment_step for environment $(typeof(env))"
 end
 
