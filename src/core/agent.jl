@@ -5,9 +5,9 @@ export AbstractAgent, start!, step!, get_action
 abstract type AbstractAgent end
 
 """
-    start!(agent::AbstractAgent, env_s_tp1, rng=Random.GLOBAL_RNG, kwargs...)
+    start!(agent::AbstractAgent, env_s_tp1; kwargs...)
 
-Function for starting the agent for a new episode.
+Function for starting the agent for a new episode. If not overloaded passes GLOBAL_RNG to start!(agent::AbstractAgent, env_s_tp1, rng; kwargs...)
 
 returns an action to get passed to the environment
 """
@@ -16,7 +16,7 @@ function start!(agent::AbstractAgent, env_s_tp1; kwargs...)
 end
 
 """
-    start!(agent::AbstractAgent, env_s_tp1, rng=Random.GLOBAL_RNG, kwargs...)
+    start!(agent::AbstractAgent, env_s_tp1, rng::AbstractRNG; kwargs...)
 """
 function start!(agent::AbstractAgent, env_s_tp1, rng::AbstractRNG; kwargs...)
     @error "Implement start! function for agent $(typeof(agent))"
@@ -26,7 +26,7 @@ end
 """
     step!(agent::AbstractAgent, env_s_tp1, r, terminal; kwargs...)
 
-Function to take a step with an agent. 
+Function to take a step with an agent. If not overloaded passes GLOBAL_RNG to step!(agent::AbstractAgent, env_s_tp1, r, terminal, rng; kwargs...)
 
 Returns an action to get passed to the environment.
 """
