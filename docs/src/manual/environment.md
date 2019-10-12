@@ -72,8 +72,8 @@ end
 
 ```Julia
 function RLCore.environment_step!(env::MountainCar,
-                                   action;
-                                   rng=Random.GLOBAL_RNG, kwargs...)
+                                   action,
+                                   rng; kwargs...)
     
     @boundscheck valid_action(env, action)
     env.vel =
