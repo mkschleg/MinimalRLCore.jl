@@ -39,8 +39,8 @@ function RLCore.reset!(env::MountainCar,
         env.vel = (start_state[2]*(vel_limit[2] - vel_limit[1])) + vel_limit[1]
     end
 end</code></pre><pre><code class="language-Julia">function RLCore.environment_step!(env::MountainCar,
-                                   action;
-                                   rng=Random.GLOBAL_RNG, kwargs...)
+                                   action,
+                                   rng; kwargs...)
     
     @boundscheck valid_action(env, action)
     env.vel =
