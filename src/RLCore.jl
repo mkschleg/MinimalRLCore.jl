@@ -14,20 +14,20 @@ export
     start!,
     step!
 
-include("core/environment.jl")
-include("core/agent.jl")
+include("environment.jl")
+include("agent.jl")
 
 export
     GVF,
     Horde,
     GVFParamFuncs
-include("core/gvf.jl")
+include("gvf.jl")
 
 export
     AbstractFeatureConstructors,
     create_features,
     feature_size
-include("core/feature_constructors.jl")
+include("feature_constructors.jl")
 
 export
     TileCoder,
