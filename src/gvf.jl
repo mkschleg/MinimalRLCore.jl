@@ -11,6 +11,9 @@ import Base.get, Base.get!
 Module containing and the GVF parameter function types. Cleaner to keep these in a seperate namespace where the user can decide to `using` if desired.
 """
 module GVFParamFuncs
+
+import Base.get
+
 using ..Random
 using ..StatsBase
 using ..RLCore
@@ -51,14 +54,14 @@ abstract type AbstractGVF end
 
 Get the parameters for the cumulant, discount, and probability of taking an action given the parameters.
 """
-function get(gvf::AbstractGVF, state_t, action_t, state_tp1, action_tp1, preds_tp1) end
+function Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1, action_tp1, preds_tp1) end
 
 """
     get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1)
 
 Convenience function: `get(gvf, state_t, action_t, state_tp1, nothing, preds_tp1)`
 """
-get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1) =
+Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1) =
     get(gvf::AbstractGVF, state_t, action_t, state_tp1, nothing, preds_tp1)
 
 """
@@ -66,7 +69,7 @@ get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1) =
 
 Convenience function: `get(gvf, state_t, action_t, state_tp1, nothing, nothing)`
 """
-get(gvf::AbstractGVF, state_t, action_t, state_tp1) =
+Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1) =
     get(gvf::AbstractGVF, state_t, action_t, state_tp1, nothing, nothing)
 
 function cumulant(gvf::AbstractGVF) end
@@ -90,7 +93,7 @@ cumulant(gvf::G) where {G <: GVF} = gvf.cumulant
 discount(gvf::G) where {G <: GVF} = gvf.discount
 policy(gvf::G) where {G <: GVF} = gvf.policy
 
-function get(gvf::GVF, state_t, action_t, state_tp1, action_tp1, preds_tp1)
+function Base.get(gvf::GVF, state_t, action_t, state_tp1, action_tp1, preds_tp1)
     c = get(gvf.cumulant, state_tp1, action_tp1, preds_tp1)
     γ = get(gvf.discount, state_t, action_t, state_tp1, action_tp1, preds_tp1)
     π_prob = get(gvf.policy, state_t, action_t)
@@ -114,7 +117,7 @@ struct Horde{T<:AbstractGVF} <: AbstractHorde
     gvfs::Vector{T}
 end
 
-function get(gvfh::Horde, state_t, action_t, state_tp1, action_tp1, preds_tp1)
+function Base.get(gvfh::Horde, state_t, action_t, state_tp1, action_tp1, preds_tp1)
     C = map(gvf -> get(cumulant(gvf), state_tp1, action_tp1, preds_tp1), gvfh.gvfs)
     Γ = map(gvf -> get(discount(gvf), state_t, action_t, state_tp1, action_tp1, preds_tp1), gvfh.gvfs)
     Π_probs = map(gvf -> get(policy(gvf), state_t, action_t), gvfh.gvfs)
@@ -128,13 +131,13 @@ function Base.get!(C::Array{T, 1}, Γ::Array{F, 1}, Π_probs::Array{H, 1}, gvfh:
     return C, Γ, Π_probs
 end
 
-get(gvfh::Horde, state_tp1, preds_tp1) =
+Base.get(gvfh::Horde, state_tp1, preds_tp1) =
     get(gvfh::Horde, nothing, nothing, state_tp1, nothing, preds_tp1)
 
-get(gvfh::Horde, state_t, action_t, state_tp1) =
+Base.get(gvfh::Horde, state_t, action_t, state_tp1) =
     get(gvfh::Horde, state_t, action_t, state_tp1, nothing, nothing)
 
-get(gvfh::Horde, state_t, action_t, state_tp1, preds_tp1) =
+Base.get(gvfh::Horde, state_t, action_t, state_tp1, preds_tp1) =
     get(gvfh::Horde, state_t, action_t, state_tp1, nothing, preds_tp1)
 
 @forward Horde.gvfs Base.length

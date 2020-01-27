@@ -30,7 +30,7 @@ end
 """
     start!(env::AbstractEnvironment, rng; kwargs...)
 """
-function start!(env::AbstractEnvironment, rng; kwargs...)
+function start!(env::AbstractEnvironment, rng::AbstractRNG; kwargs...)
     reset!(env, rng; kwargs...)
     return get_state(env)
 end

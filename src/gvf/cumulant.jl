@@ -3,7 +3,7 @@
 """
 abstract type AbstractCumulant end
 
-function get(cumulant::AbstractCumulant, state_tp1, action_tp1, preds_tp1)
+function Base.get(cumulant::AbstractCumulant, state_tp1, action_tp1, preds_tp1)
     throw(DomainError("get(CumulantType, args...) not defined!"))
 end
 
