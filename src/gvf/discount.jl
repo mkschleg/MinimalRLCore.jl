@@ -34,7 +34,7 @@ struct StateTerminationDiscount{T<:Number, F} <: AbstractDiscount
 end
 
 StateTerminationDiscount(γ, condition) =
-    new(γ, condition, zero(γ))
+    StateTerminationDiscount(γ, condition, zero(γ))
 
 Base.get(td::StateTerminationDiscount, state_t, action_t, state_tp1, action_tp1, preds_tp1) =
     td.condition(state_tp1) ? td.terminal : td.γ
