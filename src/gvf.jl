@@ -56,22 +56,6 @@ Get the parameters for the cumulant, discount, and probability of taking an acti
 """
 function Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1, action_tp1, preds_tp1) end
 
-"""
-    get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1)
-
-Convenience function: `get(gvf, state_t, action_t, state_tp1, nothing, preds_tp1)`
-"""
-Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1, preds_tp1) =
-    get(gvf::AbstractGVF, state_t, action_t, state_tp1, nothing, preds_tp1)
-
-"""
-    get(gvf::AbstractGVF, state_t, action_t, state_tp1)
-
-Convenience function: `get(gvf, state_t, action_t, state_tp1, nothing, nothing)`
-"""
-Base.get(gvf::AbstractGVF, state_t, action_t, state_tp1) =
-    get(gvf::AbstractGVF, state_t, action_t, state_tp1, nothing, nothing)
-
 function cumulant(gvf::AbstractGVF) end
 function discount(gvf::AbstractGVF) end
 function policy(gvf::AbstractGVF) end
@@ -89,9 +73,9 @@ struct GVF{C<:GVFParamFuncs.AbstractCumulant,
     policy::P
 end
 
-cumulant(gvf::G) where {G <: GVF} = gvf.cumulant
-discount(gvf::G) where {G <: GVF} = gvf.discount
-policy(gvf::G) where {G <: GVF} = gvf.policy
+cumulant(gvf::GVF) = gvf.cumulant
+discount(gvf::GVF) = gvf.discount
+policy(gvf::GVF) = gvf.policy
 
 function Base.get(gvf::GVF, state_t, action_t, state_tp1, action_tp1, preds_tp1)
     c = get(gvf.cumulant, state_tp1, action_tp1, preds_tp1)
