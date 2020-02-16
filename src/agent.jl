@@ -5,9 +5,9 @@ export AbstractAgent, start!, step!, get_action
 abstract type AbstractAgent end
 
 """
-    start!(agent::AbstractAgent, env_s_tp1; kwargs...)
+    start!(agent::AbstractAgent, env_s_tp1, args...)
 
-Function for starting the agent for a new episode. If not overloaded passes GLOBAL_RNG to start!(agent::AbstractAgent, env_s_tp1, rng; kwargs...)
+Function for starting the agent for a new episode. 
 
 returns an action to get passed to the environment
 """
@@ -17,9 +17,9 @@ end
 
 
 """
-    step!(agent::AbstractAgent, env_s_tp1, r, terminal; kwargs...)
+    step!(agent::AbstractAgent, env_s_tp1, r, terminal, args...)
 
-Function to take a step with an agent. If not overloaded passes GLOBAL_RNG to step!(agent::AbstractAgent, env_s_tp1, r, terminal, rng; kwargs...)
+Function to take a step with an agent.
 
 Returns an action to get passed to the environment.
 """

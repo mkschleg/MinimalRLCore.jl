@@ -1,21 +1,26 @@
 module RLCore
 
+
 using Random
-using Logging
 
 greet() = println("Hello Reinforcement Learning!")
 
 export
     AbstractEnvironment,
+    start!,
+    step!,
     get_actions,
     get_reward,
-    is_terminal,
+    is_terminal
+include("environment.jl")
+
+export
     AbstractAgent,
     start!,
     step!
-
-include("environment.jl")
 include("agent.jl")
+
+include("episode.jl")
 
 export
     GVF,
@@ -39,6 +44,9 @@ include("features/Normalize.jl")
 export
     RandomAgent
 include("agent/random.jl")
+
+# Not tested yet so not exported!
+include("monte_carlo.jl")
 
 
 end # module

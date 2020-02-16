@@ -21,20 +21,12 @@ end
 
 
 """
-    step!(env::AbstractEnvironment, action; kwargs...)
+    step!(env::AbstractEnvironment, action, args...)
 
 Update the state of the passed environment `env` based on the underlying dynamics and the action.
 """
-function step!(env::AbstractEnvironment, action; kwargs...) # -> env, state, reward, terminal
-    environment_step!(env, action; kwargs...)
-    return get_state(env), get_reward(env), is_terminal(env)
-end
-
-"""
-    step!(env::AbstractEnvironment, action, rng; kwargs...)
-"""
-function step!(env::AbstractEnvironment, action, rng; kwargs...) # -> env, state, reward, terminal
-    environment_step!(env, action, rng; kwargs...)
+function step!(env::AbstractEnvironment, action, args...) # -> env, state, reward, terminal
+    environment_step!(env, action, args...)
     return get_state(env), get_reward(env), is_terminal(env)
 end
 
@@ -43,7 +35,6 @@ end
 #---------------------------#
 #   Interface functions
 #---------------------------#
-
 """
     reset!(env::AbstractEnvironment, args...)
 
@@ -51,7 +42,7 @@ Reset the environment to initial conditions based on the random number generator
 
 You can implement with or without a personally defined RNG. If you choose to not implement with a personally maintained RNG remember this is not a thread safe function.
 """
-function reset!(env::AbstractEnvironment, args...; kwargs...)
+function reset!(env::AbstractEnvironment, args...)
     # reset!(env::AbstractEnvironment, Random.GLOBAL_RNG; kwargs...)
     @error "Implement reset! for environment $(typeof(env))"
 end

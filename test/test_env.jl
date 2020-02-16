@@ -5,10 +5,10 @@ using Random
 
 mutable struct TestEnv <: RLCore.AbstractEnvironment
     name::String
-    size::Number
-    state::Number
-    rew::Number
-    TestEnv(name, size) = new(name, size, 0, 0)
+    size::Int
+    state::Float64
+    rew::Float64
+    TestEnv(name, size) = new(name, size, 0.0, 0.0)
 end
 
 name(t::TestEnv) = t.name
@@ -21,6 +21,9 @@ RLCore.is_terminal(env::TestEnv) = false
 
 RLCore.reset!(env::TestEnv, rng::Random.AbstractRNG=Random.GLOBAL_RNG) =
     env.state = rand(rng) * env.size
+
+RLCore.reset!(env::TestEnv, state::Number) =
+    env.state = state
 
 RLCore.environment_step!(env::TestEnv, action, rng::AbstractRNG=Random.GLOBAL_RNG) = 
     env.rew = action*env.state
@@ -42,6 +45,16 @@ function test_env()
     @testset "TestEnv Managed RNG" begin
         env = TestEnv("Matt", 5)
         @test start!(env, rng) ≈ expected_state
+        @test all(step!(env, 1, rng) .≈ (expected_state, 1*expected_state, false))
+        @test all(step!(env, 2, rng) .≈ (expected_state, 2*expected_state, false))
+        @test all(RLCore.get_actions(env) .== (1,2))
+    end
+
+    Random.seed!(10)
+    expected_state = rand()
+    @testset "TestEnv deterministic state restart" begin
+        env = TestEnv("Matt", 5)
+        @test start!(env, expected_state) ≈ expected_state
         @test all(step!(env, 1, rng) .≈ (expected_state, 1*expected_state, false))
         @test all(step!(env, 2, rng) .≈ (expected_state, 2*expected_state, false))
         @test all(RLCore.get_actions(env) .== (1,2))
