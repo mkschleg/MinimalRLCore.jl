@@ -95,5 +95,5 @@ end
 Returns the set of actions available to take.
 """
 function get_actions(env::AbstractEnvironment)
-    return Set()
+    return nothing
 end
