@@ -16,7 +16,7 @@ import Base.get
 
 using ..Random
 using ..StatsBase
-using ..RLCore
+using ..MinimalRLCore
 
 export
     AbstractCumulant,

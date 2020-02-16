@@ -1,4 +1,4 @@
-name = "RLCore"
+name = "MinimalRLCore"
 uuid = "a0fc63f0-e6dc-11e9-23a7-4fc1812c3025"
 authors = ["Matthew Schlegel <mkschleg@gmail.com>"]
 version = "0.1.0"

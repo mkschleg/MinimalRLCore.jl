@@ -1,21 +1,21 @@
-using RLCore
+using MinimalRLCore
 using Random
 using Test
 
-mutable struct TestEnvEpis <: RLCore.AbstractEnvironment
+mutable struct TestEnvEpis <: MinimalRLCore.AbstractEnvironment
     size::Int
     state::Int
 end
 
-RLCore.get_state(env::TestEnvEpis) = env.state
-RLCore.get_reward(env::TestEnvEpis) = env.state == env.size ? 1.0 : 0.0
-RLCore.get_actions(env::TestEnvEpis) = (1, 2)
-RLCore.is_terminal(env::TestEnvEpis) = env.state == env.size
+MinimalRLCore.get_state(env::TestEnvEpis) = env.state
+MinimalRLCore.get_reward(env::TestEnvEpis) = env.state == env.size ? 1.0 : 0.0
+MinimalRLCore.get_actions(env::TestEnvEpis) = (1, 2)
+MinimalRLCore.is_terminal(env::TestEnvEpis) = env.state == env.size
 
-RLCore.reset!(env::TestEnvEpis, rng::Random.AbstractRNG=Random.GLOBAL_RNG) =
+MinimalRLCore.reset!(env::TestEnvEpis, rng::Random.AbstractRNG=Random.GLOBAL_RNG) =
     env.state = rand(rng, 1:env.size)
 
-RLCore.environment_step!(env::TestEnvEpis, action, rng::AbstractRNG=Random.GLOBAL_RNG) = 
+MinimalRLCore.environment_step!(env::TestEnvEpis, action, rng::AbstractRNG=Random.GLOBAL_RNG) = 
     env.state += action == 1 ? -1 : 1
 
 mutable struct TestAgentEps <: AbstractAgent
@@ -23,11 +23,11 @@ mutable struct TestAgentEps <: AbstractAgent
 end
 # TestAgentEps(action) = TestAgentEps(action)
 
-function RLCore.start!(agent::TestAgentEps, s)
+function MinimalRLCore.start!(agent::TestAgentEps, s)
     agent.action
 end
 
-function RLCore.step!(agent::TestAgentEps, s, r, t)
+function MinimalRLCore.step!(agent::TestAgentEps, s, r, t)
     agent.action
 end
 
@@ -47,7 +47,7 @@ function test_episode()
     @testset "Test Episode" begin
         ret = []
         Random.seed!(1)
-        total_rew, steps = RLCore.run_episode!(env, agent) do (sars)
+        total_rew, steps = MinimalRLCore.run_episode!(env, agent) do (sars)
            push!(ret, sars)
         end
         @test all(ret .== res)
@@ -59,7 +59,7 @@ function test_episode()
     @testset "Test Episode Max Steps" begin
         ret = []
         Random.seed!(1)
-        total_rew, steps = RLCore.run_episode!(env, agent, 2) do (sars)
+        total_rew, steps = MinimalRLCore.run_episode!(env, agent, 2) do (sars)
            push!(ret, sars)
         end
         @test all(ret .== res[1:2])

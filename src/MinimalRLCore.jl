@@ -1,4 +1,4 @@
-module RLCore
+module MinimalRLCore
 
 using Random
 

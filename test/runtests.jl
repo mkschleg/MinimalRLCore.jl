@@ -1,6 +1,4 @@
 using Test
-using RLCore
-using Random
 
 include("test_env.jl")
 include("test_agent.jl")

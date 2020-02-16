@@ -1,5 +1,5 @@
 
-using RLCore
+using MinimalRLCore
 using Test
 using Random
 
@@ -9,22 +9,22 @@ end
 TestAgent(size) = TestAgent(zeros(size))
 
 
-function RLCore.start!(agent::TestAgent, s)
+function MinimalRLCore.start!(agent::TestAgent, s)
     agent.cur_s .= s
     a = rand(1:4)
 end
 
-function RLCore.start!(agent::TestAgent, s, rng::Random.AbstractRNG)
+function MinimalRLCore.start!(agent::TestAgent, s, rng::Random.AbstractRNG)
     agent.cur_s .= s
     a = rand(rng, 1:4)
 end
 
-function RLCore.step!(agent::TestAgent, s, r, t)
+function MinimalRLCore.step!(agent::TestAgent, s, r, t)
     agent.cur_s .= s
     a = rand(1:4)
 end
 
-function RLCore.step!(agent::TestAgent, s, r, t, rng::Random.AbstractRNG)
+function MinimalRLCore.step!(agent::TestAgent, s, r, t, rng::Random.AbstractRNG)
     agent.cur_s .= s
     a = rand(rng, 1:4)
 end
