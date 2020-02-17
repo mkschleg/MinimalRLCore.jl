@@ -29,6 +29,3 @@ jobs:
 
 script:
   - julia --color=yes -e 'using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test("MinimalRLCore", coverage=true)'
-
-after_success:
-  - julia -e 'using Pkg; cd(Pkg.dir("MyPkg")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
