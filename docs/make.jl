@@ -1,10 +1,10 @@
 push!(LOAD_PATH,"../src/")
 
-using Documenter, RLCore
+using Documenter, MinimalRLCore
 
 makedocs(
-    sitename="RLCore",
-    modules = [RLCore],
+    sitename="MinimalRLCore",
+    modules = [MinimalRLCore],
     format = Documenter.HTML(prettyurls = false),
     pages = [
         "Home"=>"index.md",
@@ -25,6 +25,6 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/mkschleg/RLCore.jl.git",
+    repo = "github.com/mkschleg/MinimalRLCore.jl.git",
     devbranch = "master"
 )

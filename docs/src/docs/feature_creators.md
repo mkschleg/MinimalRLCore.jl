@@ -2,10 +2,10 @@
 
 
 ```@meta
-CurrentModule = RLCore
+CurrentModule = MinimalRLCore
 ```
 
 ```@autodocs
-Modules = [RLCore]
+Modules = [MinimalRLCore]
 Pages   = ["feature_constructors.jl"]
 ```

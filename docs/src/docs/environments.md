@@ -1,11 +1,11 @@
 # Environment
 
 ```@meta
-CurrentModule = RLCore
+CurrentModule = MinimalRLCore
 ```
 
 ```@autodocs
-Modules = [RLCore]
+Modules = [MinimalRLCore]
 Pages   = ["environment.jl"]
 ```
 
