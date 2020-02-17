@@ -24,11 +24,11 @@ export
     run_episode!
 include("episode.jl")
 
-export
-    GVF,
-    Horde,
-    GVFParamFuncs
-include("gvf.jl")
+# export
+#     GVF,
+#     Horde,
+#     GVFParamFuncs
+# include("gvf.jl")
 
 export
     AbstractFeatureConstructors,
@@ -49,7 +49,7 @@ include("feature_constructors.jl")
 # include("agent/random.jl")
 
 # Not tested yet so not exported!
-include("monte_carlo.jl")
+# include("monte_carlo.jl")
 
 
 end # module
