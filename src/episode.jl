@@ -77,7 +77,7 @@ function Base.iterate(ep::Episode, state = _start!(ep))
     agent_ret = if ep.rng isa Nothing
         step!(agent, s′, r, t)
     else
-        step!(agent, s′, r, t, rng)
+        step!(agent, s′, r, t, ep.rng)
     end
 
     ep.total_reward += r
