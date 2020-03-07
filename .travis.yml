@@ -11,9 +11,7 @@ codecov: true
 matrix:
   allow_failures:
     - julia: nightly
-
-## Create Documentation 
-jobs:
+  ## Create Documentation 
   include:
     - stage: "Documentation"
       julia: 1.0
