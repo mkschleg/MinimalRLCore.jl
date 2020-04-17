@@ -1,7 +1,7 @@
 name = "MinimalRLCore"
 uuid = "4557a151-568a-41c4-844f-9d8069264cea"
 authors = ["Matthew Schlegel <mkschleg@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Lazy = "50d2b5c4-7a5e-59d5-8109-a42b560f39c0"
