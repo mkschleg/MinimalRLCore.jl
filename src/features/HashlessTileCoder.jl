@@ -4,7 +4,42 @@ export HashlessTileCoder, HashlessTileCoderFull
 abstract type AbstractHashlessTileCoder <: AbstractFeatureConstructor
 end
 
-"""transform args for tilecoder"""
+"""
+    HashlessTileCoder(tiles_per_dim, bounds_per_dim, num_tilings, wrap, offset)
+
+This is a struct for tile-coding raw states to a list of active indices. The constructor described here uses the helper function `hashlesstilecoder_args` to convert human-readable variables into the quantities used to compute the tiled indices.
+
+# Arguments
+- `tiles_per_dim::Vector{<:Integer}`: A vector describing the number of tiles per dimension of the state input. To tile two dimensions of state together with 2 tiles on the first dimension and 3 tiles on the second, set `tiles_per_dim = [2, 3]`.
+- `bounds_per_dim::Matrix{<:Real}`: A matrix of real values denoting the upper and lower bounds of each state dimension. If both state dimensions are bounded in `[0, 1]`, pass `bounds_per_dim = [0 0 ; 1 1]`.
+- `num_tilings::Integer`: The tilecoder will map state to `num_tilings` indices.
+- `wrap::Union{AbstractVector{Bool}, Nothing}`: Nothing, indicating no wrapping, or a vector of booleans indicating whether that index of the state input should be wrapped. Setting `wrap[k] = true` means that the two ends of `bounds_per_dim[:,k]` are equivalent. For example, if `state[k]` describes an angle between 0 and 2π, `wrap[k]` should be set to `true`.
+- `offset`: A function that describes how each tiling should be offset from the others. The recommended setting is to use the default odd-numbered offsets, called asymmetric displacement by [Parks and Militzer](https://doi.org/10.1016/S1474-6670(17)54222-6).
+
+"""
+mutable struct HashlessTileCoder <: AbstractHashlessTileCoder
+    limits::Matrix{Float64}
+    norm_dims::Vector{Float64}
+    tiling_dims::Vector{Int32}
+    wrap_any_dims::Bool
+    offsets::Matrix{Float64}
+    tiling_loc::Vector{Int}
+    tile_loc::Vector{Int}
+    num_features::Int
+    num_active_features::Int
+
+    function HashlessTileCoder(a...;k...)
+        l, n, t, w, o, tgl, til, nf, naf = hashlesstilecoder_args(a...;k...)
+        new(l, n, t, w, o, tgl, til, nf, naf)
+    end
+end
+
+feature_size(fc::T) where {T<:HashlessTileCoder} = fc.num_features
+
+
+"""
+Helper function to make constructing each feature vector later easier
+"""
 hashlesstilecoder_args(tiles_per_dim::Vector{<:Integer},
                        bounds_per_dim::Matrix{<:Real},
                        num_tilings::Integer;
@@ -46,25 +81,10 @@ hashlesstilecoder_args(tiles_per_dim::Vector{<:Integer},
             tile_loc, num_features, num_active_features)
 end
 
-mutable struct HashlessTileCoder <: AbstractHashlessTileCoder
-    limits::Matrix{Float64}
-    norm_dims::Vector{Float64}
-    tiling_dims::Vector{Int32}
-    wrap_any_dims::Bool
-    offsets::Matrix{Float64}
-    tiling_loc::Vector{Int}
-    tile_loc::Vector{Int}
-    num_features::Int
-    num_active_features::Int
-
-    function HashlessTileCoder(a...;k...)
-        l, n, t, w, o, tgl, til, nf, naf = hashlesstilecoder_args(a...;k...)
-        new(l, n, t, w, o, tgl, til, nf, naf)
-    end
-end
-
-feature_size(fc::T) where {T<:HashlessTileCoder} = fc.num_features
-
+"""
+Constructs a list of active indices from the quantities defined by
+`hashlesstilecoder_args`.
+"""
 function _create_features(fc::T, s) where {T<:AbstractHashlessTileCoder}
     if fc.wrap_any_dims
         # wrapping means modding by dim[i] instead of dim[i] + 1
@@ -83,6 +103,21 @@ function _create_features(fc::T, s) where {T<:AbstractHashlessTileCoder}
 end
 create_features(fc::HashlessTileCoder, s) = _create_features(fc, s)
 
+
+
+"""
+    HashlessTileCoderFull(tiles_per_dim, bounds_per_dim, num_tilings, wrap, offset)
+
+This is a struct for tile-coding raw states. Unlike HashlessTileCoder, HashlessTileCoderFull returns a full binary array where ones denote that an index is active. The constructor described here uses the helper function `hashlesstilecoder_args` to convert human-readable variables into the quantities used to compute the tiled indices.
+
+# Arguments
+- `tiles_per_dim::Vector{<:Integer}`: A vector describing the number of tiles per dimension of the state input. To tile two dimensions of state together with 2 tiles on the first dimension and 3 tiles on the second, set `tiles_per_dim = [2, 3]`.
+- `bounds_per_dim::Matrix{<:Real}`: A matrix of real values denoting the upper and lower bounds of each state dimension. If both state dimensions are bounded in `[0, 1]`, pass `bounds_per_dim = [0 0 ; 1 1]`.
+- `num_tilings::Integer`: The tilecoder will map state to `num_tilings` indices.
+- `wrap::Union{AbstractVector{Bool}, Nothing}`: Nothing, indicating no wrapping, or a vector of booleans indicating whether that index of the state input should be wrapped. Setting `wrap[k] = true` means that the two ends of `bounds_per_dim[:,k]` are equivalent. For example, if `state[k]` describes an angle between 0 and 2π, `wrap[k]` should be set to `true`.
+- `offset`: A function that describes how each tiling should be offset from the others. The recommended setting is to use the default odd-numbered offsets, called asymmetric displacement by [Parks and Militzer](https://doi.org/10.1016/S1474-6670(17)54222-6).
+
+"""
 mutable struct HashlessTileCoderFull <: AbstractHashlessTileCoder
     limits::Matrix{Float64}
     norm_dims::Vector{Float64}
