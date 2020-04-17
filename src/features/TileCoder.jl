@@ -30,4 +30,3 @@ function create_features(fc::TileCoder, s; ints=[], readonly=false)
 end
 
 feature_size(fc::TileCoder) = fc.tilings*(fc.tiles+1)^fc.dims * num_ints
-
