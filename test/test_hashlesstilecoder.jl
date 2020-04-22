@@ -1,7 +1,8 @@
 
-using MinimalRLCore
 using Test
 using Random
+
+using MinimalRLCore
 
 function test_hashlesstilecoder()
 
