@@ -1,5 +1,4 @@
 
-export HashlessTileCoder, HashlessTileCoderFull
 
 abstract type AbstractHashlessTileCoder <: AbstractFeatureConstructor
 end
