@@ -36,6 +36,10 @@ export
     feature_size
 include("feature_constructors.jl")
 
+# export
+#     HashlessTileCoder,
+#     HashlessTileCoderFull
+include("features/HashlessTileCoder.jl")
 
 # export
 #     TileCoder,
