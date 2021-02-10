@@ -4,6 +4,7 @@ authors = ["Matthew Schlegel <mkschleg@gmail.com>"]
 version = "0.1.1"
 
 [deps]
+CommonRLInterface = "d842c3ba-07a1-494f-bbec-f5741b0a3e98"
 Lazy = "50d2b5c4-7a5e-59d5-8109-a42b560f39c0"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -11,7 +12,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 Lazy = "0.14, 0.15"
-StatsBase = "0.31, 0.32"
+StatsBase = "0.31, 0.32, 0.33"
 julia = "1"
 
 [extras]

@@ -33,18 +33,19 @@ mutable struct HashlessTileCoder <: AbstractHashlessTileCoder
     end
 end
 
-feature_size(fc::T) where {T<:HashlessTileCoder} = fc.num_features
 
+feature_size(fc::T) where {T<:HashlessTileCoder} = fc.num_features
+Base.size(fc::HashlessTileCoder) = fc.num_features
 
 """
 Helper function to make constructing each feature vector later easier
 """
-hashlesstilecoder_args(tiles_per_dim::Vector{<:Integer},
-                       bounds_per_dim::Matrix{<:Real},
-                       num_tilings::Integer;
-                       wrap::Union{AbstractVector{Bool}, Nothing}=nothing,
-                       offset= n -> collect(1:2:2*n-1) # 1st n odd nums
-                       ) = begin
+function hashlesstilecoder_args(tiles_per_dim::Vector{<:Integer},
+                                bounds_per_dim::Matrix{<:Real},
+                                num_tilings::Integer;
+                                wrap::Union{AbstractVector{Bool}, Nothing}=nothing,
+                                offset= n -> collect(1:2:2*n-1) # 1st n odd nums
+                                ) 
     n = length(tiles_per_dim)
 
     # these normalize the ith input float to be between 0 and dim[i] + 1

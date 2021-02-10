@@ -26,3 +26,13 @@ Returns an action to get passed to the environment.
 function step!(agent::AbstractAgent, env_s_tp1, r, terminal, args...)
     @error "Implement step! for $(typeof(agent))"
 end
+
+"""
+    end!(agent::AbstractAgent, evn_s_tp1, r, args...)
+
+Function called when the environment is terminated. Default calls
+`step!(agent, env_s_tp1, r, true, args...)`
+"""
+function end!(agent::AbstractAgent, env_s_tp1, r, args...)
+    step!(agent, env_s_tp1, r, true, args...)
+end

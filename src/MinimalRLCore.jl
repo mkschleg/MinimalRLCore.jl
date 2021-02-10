@@ -30,13 +30,6 @@ export
     feature_size
 include("feature_constructors.jl")
 
-# export
-#     HashlessTileCoder,
-#     HashlessTileCoderFull
-include("features/HashlessTileCoder.jl")
-
-# Not tested yet so not exported!
-# include("monte_carlo.jl")
-
+# include("features/HashlessTileCoder.jl")
 
 end # module

@@ -1,5 +1,7 @@
 
 
+import CommonRLInterface
+
 """
 Represents an abstract environment for reinforcement learning agents. Has several functions that need to be implemented to work. 
 All interfaces expect an abstract environment!
@@ -19,6 +21,10 @@ function start!(env::AbstractEnvironment, args...)
     return get_state(env)
 end
 
+function start!(env::CommonRLInterface.AbstractEnv)
+    reset!(env)
+    return CommonRLInterface.observe(env)
+end
 
 """
     step!(env::AbstractEnvironment, action, args...)
@@ -30,6 +36,10 @@ function step!(env::AbstractEnvironment, action, args...) # -> env, state, rewar
     return get_state(env), get_reward(env), is_terminal(env)
 end
 
+function step!(env::CommonRLInterface.AbstractEnv, action) # -> env, state, reward, terminal
+    rew = CommonRLInterface.act!(env, action)
+    return CommonRLInterface.observe(env), rew, CommonRLInterface.terminated(env)
+end
 
 
 #---------------------------#
@@ -94,6 +104,13 @@ end
 
 Returns the set of actions available to take.
 """
+# get_actions
 function get_actions(env::AbstractEnvironment)
     return nothing
 end
+
+
+
+
+
+
