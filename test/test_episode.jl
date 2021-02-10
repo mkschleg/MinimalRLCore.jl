@@ -1,6 +1,7 @@
 using MinimalRLCore
 using Random
 using Test
+using StableRNGs
 
 mutable struct TestEnvEpis <: MinimalRLCore.AbstractEnvironment
     size::Int
@@ -23,19 +24,18 @@ mutable struct TestAgentEps <: AbstractAgent
 end
 # TestAgentEps(action) = TestAgentEps(action)
 
-function MinimalRLCore.start!(agent::TestAgentEps, s)
+function MinimalRLCore.start!(agent::TestAgentEps, s, args...)
     agent.action
 end
 
-function MinimalRLCore.step!(agent::TestAgentEps, s, r, t)
+function MinimalRLCore.step!(agent::TestAgentEps, s, r, t, args...)
     agent.action
 end
 
 
 function test_episode()
 
-    res = [(3, 2, 4, 0.0, false),
-           (4, 2, 5, 0.0, false),
+    res = [(4, 2, 5, 0.0, false),
            (5, 2, 6, 0.0, false),
            (6, 2, 7, 0.0, false),
            (7, 2, 8, 0.0, false),
@@ -46,13 +46,14 @@ function test_episode()
     agent = TestAgentEps(2)
     @testset "Test Episode" begin
         ret = []
-        Random.seed!(1)
-        total_rew, steps = MinimalRLCore.run_episode!(env, agent) do (sars)
+        rng = StableRNGs.StableRNG(1)
+        total_rew, steps = MinimalRLCore.run_episode!(env, agent, 10000, rng) do (sars)
            push!(ret, sars)
         end
+        println(ret)
         @test all(ret .== res)
         @test total_rew == 1.0
-        @test steps == 7
+        @test steps == 6
     end
 
 
