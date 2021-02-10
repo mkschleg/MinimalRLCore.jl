@@ -59,8 +59,8 @@ function test_episode()
 
     @testset "Test Episode Max Steps" begin
         ret = []
-        Random.seed!(1)
-        total_rew, steps = MinimalRLCore.run_episode!(env, agent, 2) do (sars)
+        rng = StableRNGs.StableRNG(1)
+        total_rew, steps = MinimalRLCore.run_episode!(env, agent, 2, rng) do (sars)
            push!(ret, sars)
         end
         @test all(ret .== res[1:2])
