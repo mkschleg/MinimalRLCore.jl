@@ -2,6 +2,7 @@
 using MinimalRLCore
 using Test
 using Random
+using StableRNGs
 
 mutable struct TestAgent <: AbstractAgent
     cur_s::Array{Float64, 1}
@@ -44,16 +45,16 @@ function test_agent()
     #     @test all(agent.cur_s .== s)
     # end
 
-    # @testset "Test Agent local RNG" begin
-    #     agent = TestAgent(2)
-    #     rng = MersenneTwister(1)
-    #     s = rand(rng, 2)
-    #     @test start!(agent, s, rng) == 4
-    #     @test all(agent.cur_s .== s)
-    #     s = rand(rng, 2)
-    #     @test step!(agent, s, 0, false, rng) == 3
-    #     @test all(agent.cur_s .== s)
-    # end
+    @testset "Test Agent local RNG" begin
+        agent = TestAgent(2)
+        rng = StableRNG(1)
+        s = rand(rng, 2)
+        @test start!(agent, s, rng) == 1
+        @test all(agent.cur_s .== s)
+        s = rand(rng, 2)
+        @test step!(agent, s, 0, false, rng) == 2
+        @test all(agent.cur_s .== s)
+    end
 
     
 end
