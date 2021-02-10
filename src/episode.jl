@@ -101,7 +101,7 @@ function _agent_step!(ep::Episode, s′, r, t)
     end
 end
 
-function _agent_end!(ep::Episode, s′, r, t)
+function _agent_end!(ep::Episode, s′, r)
     if ep.rng isa Nothing
         end!(ep.agent, s′, r)
     else
