@@ -1,7 +1,7 @@
 name = "MinimalRLCore"
 uuid = "4557a151-568a-41c4-844f-9d8069264cea"
 authors = ["Matthew Schlegel <mkschleg@gmail.com>"]
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 CommonRLInterface = "d842c3ba-07a1-494f-bbec-f5741b0a3e98"
