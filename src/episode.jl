@@ -129,7 +129,7 @@ function _step!(ep::Episode, agent_ret)
     action = _get_action(agent_ret)
 
     s′, r, t = _env_step!(ep, action)
-    agent_ret = if t
+    agent_ret = if t == false
         _agent_step!(ep, s′, r, t)
     else
         _agent_end!(ep, s′, r)
