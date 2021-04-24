@@ -1,4 +1,4 @@
-# RLCore.jl
+# MinimalRLCore.jl
 
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://mkschleg.github.io/MinimalRLCore.jl/dev)
 [![Build Status](https://travis-ci.com/mkschleg/JuliaRL.jl.svg?branch=refactor)](https://travis-ci.com/mkschleg/MinimalRLCore.jl)
